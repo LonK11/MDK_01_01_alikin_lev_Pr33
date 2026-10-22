@@ -8,9 +8,7 @@ using System.Windows.Media.Imaging;
 using System;
 using System.IO;
 using System.Linq;
-using System.Text.RegularExpressions;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Media.Imaging;
 
 namespace ChatStudents_Alikin.Pages
@@ -28,7 +26,7 @@ namespace ChatStudents_Alikin.Pages
         }
         public bool CheckEmpty(string Pattern, string Input)
         {
-            Matсh m = Regex.Match(Input, Pattern);
+            Match m = Regex.Match(Input, Pattern);
             return m.Success;
         }
         private void Continue(object sender, RoutedEventArgs e)
