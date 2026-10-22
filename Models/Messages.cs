@@ -21,6 +21,7 @@ namespace ChatStudents_Alikin.Models
             this.UserFrom = UserFrom;
             this.UserTo = UserTo;
             this.Message = Message;
+
         }
     }
 }
