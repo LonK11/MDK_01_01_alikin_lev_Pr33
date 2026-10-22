@@ -59,19 +59,18 @@ namespace ChatStudents_Alikin.Pages
                                               x.Lastname == Lastname.Text &&
                                               x.Surname == Surname.Text).Count() > 0)
             {
-                MainWindow.Instance.LoginUser = usersContext.Users.Where(x => x.Firstname == Firstname.Text &&
-                                                                              x.Lastname == Lastname.Text &&
-                                                                              x.Surname == Surname.Text).First();
+                MainWindow.Instance.LoginUser = usersContext.Users.Where(x => x.Firstname == Firstname.Text && x.Lastname == Lastname.Text && x.Surname == Surname.Text).First();
                 MainWindow.Instance.LoginUser.Photo = File.ReadAllBytes(srcUserImage);
+                MainWindow.Instance.LoginUser.LastAction = DateTime.Now;
                 usersContext.SaveChanges();
             }
             else
             {
                 usersContext.Users.Add(new Users(Lastname.Text, Firstname.Text, Surname.Text, File.ReadAllBytes(srcUserImage)));
                 usersContext.SaveChanges();
-                MainWindow.Instance.LoginUser = usersContext.Users.Where(x => x.Firstname == Firstname.Text &&
-                                                                              x.Lastname == Lastname.Text &&
-                                                                              x.Surname == Surname.Text).First();
+                MainWindow.Instance.LoginUser = usersContext.Users.Where(x => x.Firstname == Firstname.Text &&   x.Lastname == Lastname.Text &&   x.Surname == Surname.Text).First();
+                MainWindow.Instance.LoginUser.LastAction = DateTime.Now;
+                usersContext.SaveChanges();
             }
 
             MainWindow.Instance.OpenPages(new Pages.Main());

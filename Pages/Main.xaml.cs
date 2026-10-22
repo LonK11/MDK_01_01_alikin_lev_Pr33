@@ -27,13 +27,17 @@ namespace ChatStudents_Alikin.Pages
         public Users SelectedUser = null;
         public UsersContext usersContext = new UsersContext();
         public MessagesContext messagesContext = new MessagesContext();
-        public DispatcherTimer Timer = new DispatcherTimer() { Interval = new System.TimeSpan(0, 0, 3)};
+        public DispatcherTimer Timer = new DispatcherTimer() { Interval = new System.TimeSpan(0, 0, 3) };
         public Main()
         {
             InitializeComponent();
+            Timer.Tick += Timer_Tick;
+            Timer.Start();
+            UpdateLastAction();
         }
         public void LoadUsers()
         {
+            ParentUsers.Children.Clear();
             foreach (Users user in usersContext.Users)
             {
                 if (user.Id != MainWindow.Instance.LoginUser.Id)
@@ -42,14 +46,26 @@ namespace ChatStudents_Alikin.Pages
         }
         private void Timer_Tick(object sender, EventArgs e)
         {
+            LoadUsers();
+
             if (SelectedUser != null)
             {
-                SelectUser(SelectedUser);
+                var selected = usersContext.Users.Where(x => x.Id == SelectedUser.Id).First();
+                imgOnline.Visibility = selected.IsOnline ? Visibility.Visible : Visibility.Hidden;
+                Status.Content = selected.IsOnline ? "онлайн" : "был(а) недавно";
             }
 
-            Timer.Tick += Timer_Tick;
-
-            Timer.Start();
+            UpdateLastAction();
+        }
+        public void UpdateLastAction()
+        {
+            try
+            {
+                var loginUser = usersContext.Users.Where(x => x.Id == MainWindow.Instance.LoginUser.Id).First();
+                loginUser.LastAction = DateTime.Now;
+                usersContext.SaveChanges();
+            }
+            catch { }
         }
         public void SelectUser(Users User)
         {
@@ -57,25 +73,26 @@ namespace ChatStudents_Alikin.Pages
             Chat.Visibility = Visibility.Visible;
             imgUser.Source = BitmapFromArrayByte.LoadImage(User.Photo);
             FIO.Content = User.ToFIO();
+            imgOnline.Visibility = User.IsOnline ? Visibility.Visible : Visibility.Hidden;
+            Status.Content = User.IsOnline ? "онлайн" : "был(а) недавно";
             ParentMessages.Children.Clear();
             foreach (Messages Message in messagesContext.Messages.Where(x =>
                 (x.UserFrom == User.Id && x.UserTo == MainWindow.Instance.LoginUser.Id) ||
                 (x.UserFrom == MainWindow.Instance.LoginUser.Id && x.UserTo == User.Id)).OrderBy(x => x.Id))
             {
-                // Добавляем сообщение в диалог
                 ParentMessages.Children.Add(new Pages.Items.Message(Message, usersContext.Users.Where(x => x.Id == Message.UserFrom).First()));
             }
         }
-        public void Send(object sender, KeyEventArgs e )
+        public void Send(object sender, KeyEventArgs e)
         {
-            if(e.Key == Key.Enter)
+            if (e.Key == Key.Enter)
             {
                 Messages message = new Messages(
                     MainWindow.Instance.LoginUser.Id,
                     SelectedUser.Id,
                     Message.Text
                     );
-                messagesContext.Messages.Add( message );
+                messagesContext.Messages.Add(message);
                 messagesContext.SaveChanges();
                 ParentMessages.Children.Add(new Pages.Items.Message(message, MainWindow.Instance.LoginUser));
                 Message.Text = "";

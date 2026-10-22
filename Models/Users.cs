@@ -17,6 +17,8 @@ namespace ChatStudents_Alikin.Models
         public string Surname { get; set; }
 
         public byte[] Photo { get; set; }
+        public DateTime? LastAction { get; set; }
+        public bool IsOnline => LastAction.HasValue && (DateTime.Now - LastAction.Value).TotalMinutes <= 5;
 
         public Users(string Lastname, string Firstname, string Surname, byte[] Photo)
         {

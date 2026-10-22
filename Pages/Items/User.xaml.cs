@@ -20,6 +20,7 @@ namespace ChatStudents_Alikin.Pages.Items
             this.user = user;
             imgUser.Source = BitmapFromArrayByte.LoadImage(user.Photo);
             FIO.Content = user.ToFIO();
+            imgOnline.Visibility = user.IsOnline ? System.Windows.Visibility.Visible : System.Windows.Visibility.Hidden;
         }
         private void SelectChat(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
