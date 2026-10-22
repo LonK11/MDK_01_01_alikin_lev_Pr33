@@ -9,6 +9,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Images\ic-online.png" />
+    <None Remove="Images\ic-user.png" />
+    <None Remove="Images\logo.png" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.32" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.32" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.32">
@@ -18,8 +24,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Images\" />
-    <Folder Include="Pages\" />
+    <Resource Include="Images\ic-online.png" />
+    <Resource Include="Images\ic-user.png" />
+    <Resource Include="Images\logo.png" />
   </ItemGroup>
 
 </Project>
